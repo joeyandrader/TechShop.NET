@@ -1,3 +1,4 @@
+using BackEndAPI.Models;
 using BackEndAPI.src.Base.Contracts.Service;
 using BackEndAPI.src.Base.DB;
 using BackEndAPI.src.Base.Ioc;
@@ -28,6 +29,7 @@ builder.Services.AddDbContext<DataContext>(opt => opt.UseNpgsql(AppSettings.SqlS
 //builder.Services.AddTransient<JwtMiddleware>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUserContextService, UserContextService>();
+builder.Services.AddScoped<RawJsonActionFilter>();
 
 var app = builder.Build();
 

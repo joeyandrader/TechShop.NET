@@ -8,51 +8,43 @@ namespace BackEndAPI.src.Base.Utilities
 {
     public static class GenericMap
     {
-        public static TTarget MapTo<TTarget>(this object source, TTarget target)
+        public static T MapTo<T>(T current, object updateModel)
         {
-            if (source == null)
+            if (current == null)
             {
-                throw new ArgumentNullException("source");
+                throw new ArgumentNullException(nameof(current));
             }
-            Type typeFromHandle = typeof(TTarget);
-            PropertyInfo[] properties = source.GetType().GetProperties();
-            PropertyInfo[] properties2 = typeFromHandle.GetProperties();
-            PropertyInfo[] array = properties;
-
-            foreach (PropertyInfo sourceProperty in array)
+            var type = current.GetType();
+            foreach (var property in type.GetProperties())
             {
                 try
                 {
-                    if (!(sourceProperty.Name == "Id"))
+                    if (!(property.Name == "Id"))
                     {
-                        goto IL_00be;
+                        goto pula;
                     }
 
-                    object value = sourceProperty.GetValue(target);
+                    object value = property.GetValue(current);
                     if (value == null || !(value.GetType().Name == "Int32") || (int)value <= 0)
                     {
-                        goto IL_00be;
+                        goto pula;
                     }
-
-                    goto end_IL_0053;
-                IL_00be:
-                    if (!(sourceProperty.Name == "Password"))
+                    goto end_Pula;
+                pula:
+                    var updateValue = updateModel.GetType().GetProperty(property.Name)?.GetValue(updateModel, null);
+                    if (updateValue != null)
                     {
-                        PropertyInfo propertyInfo = properties2.FirstOrDefault((PropertyInfo p) => p.Name == sourceProperty.Name && p.PropertyType == sourceProperty.PropertyType);
-                        if (propertyInfo != null)
-                        {
-                            propertyInfo.SetValue(target, sourceProperty.GetValue(source));
-                        }
+                        property.SetValue(current, updateValue, null);
                     }
-                end_IL_0053:
+                end_Pula:
                     ;
                 }
-                catch (System.Exception ex)
+                catch (Exception ex)
                 {
                     string message = ex.Message;
                 }
             }
-            return target;
+            return current;
         }
 
         public static void ChangePropertyValue<TTarget>(this TTarget source, string propertyName, object value)

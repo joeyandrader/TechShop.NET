@@ -2,7 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Reflection;
+using System.Text.Json;
 using System.Threading.Tasks;
+using BackEndAPI.Models;
 using BackEndAPI.Models.Data.Interfaces;
 using BackEndAPI.src.Base.Contracts.Service;
 using BackEndAPI.src.Base.Enums;
@@ -65,11 +68,46 @@ namespace BackEndAPI.src.Base.Middlewares
 
         #region PATCH
         [HttpPatch("{id}")]
+        [ServiceFilter(typeof(RawJsonActionFilter))]
         public virtual async Task<ActionResult<TModel>> Patch(TKey id, TModel updateDTO)
         {
             try
             {
-                return BuildResponse<TModel>(await _service.Update(id, updateDTO));
+                if (updateDTO != null)
+                {
+                    var objToUpdate = await _service.Get(id);
+                    if (objToUpdate != null)
+                    {
+                        if (HttpContext.Items.TryGetValue("RawJson", out var rawJson) && rawJson is string json)
+                        {
+                            JsonDocument document = JsonDocument.Parse(json);
+
+                            JsonElement root = document.RootElement;
+                            foreach (JsonProperty property in root.EnumerateObject())
+                            {
+                                string propertyName = property.Name;
+
+                                var propertyInfo = objToUpdate.GetType().GetProperty(propertyName, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+                                if (propertyInfo != null)
+                                {
+                                    propertyInfo.SetValue(objToUpdate, updateDTO.GetType().GetProperty(propertyInfo.Name)?.GetValue(updateDTO));
+                                }
+
+                            }
+
+                        }
+                        return BuildResponse<TModel>(await _service.Update(id, updateDTO));
+                    }
+                    else
+                    {
+                        throw new Exception("Objeto não encontrado");
+                    }
+                }
+                else
+                {
+                    throw new Exception("Objeto vazio");
+                }
+
             }
             catch (System.Exception ex)
             {

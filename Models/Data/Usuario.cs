@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BackEndAPI.Models.Data.Interfaces;
 using BackEndAPI.src.Base.DB;
+using BackEndAPI.src.Base.Enums;
 using BackEndAPI.src.Base.Utilities;
 
 namespace BackEndAPI.Models.Data
@@ -40,6 +41,9 @@ namespace BackEndAPI.Models.Data
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
+        [DefaultValue(0)]
+        public AccountType AccountType { get; set; } = AccountType.Usuario;
 
 
         #region PasswordHash

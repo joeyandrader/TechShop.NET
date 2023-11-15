@@ -5,4 +5,5 @@ namespace BackEndAPI.src.Base.Enums
         Success = 0,
         Erro = 1
     }
+
 }

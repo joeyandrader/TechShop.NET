@@ -53,14 +53,13 @@ namespace BackEndAPI.src.Repositorys
 
         public virtual async Task<TModel> Update(TKey id, TModel updateDTO)
         {
-            _context.Entry(updateDTO).State = EntityState.Detached;
             var newObject = await DefaultQuery.FirstOrDefaultAsync(x => x.Id.Equals(id));
             if (newObject == null)
             {
                 throw new Exception("Não é possivel fazer alteração, verifique os dados passado!");
             }
-
-            newObject = updateDTO.MapTo<TModel>(newObject);
+            updateDTO.ChangePropertyValue("UpdatedAt", DateTime.UtcNow);
+            newObject = GenericMap.MapTo(newObject, updateDTO);
             _context.Update(newObject);
             await _context.SaveChangesAsync();
             return newObject;
