@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 using BackEndAPI.Models.Data.Interfaces;
 using BackEndAPI.src.Base.DB;
 using BackEndAPI.src.Base.Utilities;
@@ -20,6 +22,8 @@ namespace BackEndAPI.Models.Data
         public string? Description { get; set; }
 
         #region Relationship
+        [XmlIgnore]
+        [JsonIgnore]
         public Product? Product { get; set; }
         #endregion
 

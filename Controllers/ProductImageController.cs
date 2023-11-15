@@ -7,8 +7,8 @@ namespace BackEndAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ProductImageController : CrudBaseController<Product, int>
+    public class ProductImageController : CrudBaseController<ProductImage, int>
     {
-        public ProductImageController(IService<Product, int> service) : base(service) { }
+        public ProductImageController(IService<ProductImage, int> service) : base(service) { }
     }
 }
