@@ -8,9 +8,12 @@ namespace BackEndAPI.src.Base.Utilities
     public static class AppSettings
     {
         public static string? SqlStringConnection { get; set; }
+
+        public static string JwtKey { get; set; }
         public static void LoadSettings(IConfiguration config)
         {
             SqlStringConnection = config.GetValue<string>("SqlStringConnection");
+            JwtKey = config.GetValue<string>("Jwt:JwtKey");
         }
     }
 }

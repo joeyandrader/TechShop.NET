@@ -19,12 +19,14 @@ namespace BackEndAPI.src.Base.Ioc
             services.AddScoped<IRepository<Product, int>, ProductRepository<Product, int>>();
             services.AddScoped<IRepository<Category, int>, CategoryRepository<Category, int>>();
             services.AddScoped<IRepository<ProductImage, int>, ProductImageRepository<ProductImage, int>>();
+            services.AddScoped<IAuthRepository, AuthRepository>(); // Metodo de authentication
 
             //Services
             services.AddScoped<IService<Usuario, int>, UsuarioService<Usuario, int>>();
             services.AddScoped<IService<Product, int>, ProductService<Product, int>>();
             services.AddScoped<IService<Category, int>, CategoryService<Category, int>>();
             services.AddScoped<IService<ProductImage, int>, ProductImageService<ProductImage, int>>();
+            services.AddScoped<IAuthService, AuthService>(); // Metodo de authentication
         }
     }
 }

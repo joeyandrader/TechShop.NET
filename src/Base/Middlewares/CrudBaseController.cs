@@ -9,6 +9,7 @@ using BackEndAPI.Models;
 using BackEndAPI.Models.Data.Interfaces;
 using BackEndAPI.src.Base.Contracts.Service;
 using BackEndAPI.src.Base.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BackEndAPI.src.Base.Middlewares
