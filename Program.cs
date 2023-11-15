@@ -31,6 +31,18 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUserContextService, UserContextService>();
 builder.Services.AddScoped<RawJsonActionFilter>();
 
+//Add Cors
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("Default",
+                          policy =>
+                          {
+                              policy.AllowAnyOrigin()
+                                    .AllowAnyHeader()
+                                    .AllowAnyMethod();
+                          });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -39,6 +51,20 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseCors("Default");
+
+
+app.UseWhen(context => context.Request.Method == "OPTIONS", (IApplicationBuilder app) =>
+{
+    app.Run(async context =>
+    {
+        context.Response.StatusCode = 200;
+        context.Response.Headers.Add("Access-Control-Allow-Origin", "*");
+        context.Response.Headers.Add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+        context.Response.Headers.Add("Access-Control-Allow-Headers", "Content-Type, Authorization");
+        await context.Response.WriteAsync("Preflight request handled.");
+    });
+});
 
 app.UseHttpsRedirection();
 

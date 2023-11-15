@@ -60,7 +60,6 @@ namespace BackEndAPI.src.Repositorys
             }
             updateDTO.ChangePropertyValue("UpdatedAt", DateTime.UtcNow);
             newObject = GenericMap.MapTo(newObject, updateDTO);
-            _context.Update(newObject);
             await _context.SaveChangesAsync();
             return newObject;
         }
